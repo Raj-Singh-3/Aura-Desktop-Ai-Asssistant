@@ -5,7 +5,7 @@ import LinkedInPost from '../LinkedIn/LinkedInPost';
 import EmailSender from '../Email/EmailSender';
 import AlarmManager from '../Alarms/AlarmManager';
 import MusicPlayer from '../Music/MusicPlayer';
-import YouTubePlayer from '../YouTube/YouTubePlayer';
+// import YouTubePlayer from '../YouTube/YouTubePlayer';
 import ChatAssistant from '../Chat/ChatAssistant';
 import FileManager from '../Files/FileManager';
 
