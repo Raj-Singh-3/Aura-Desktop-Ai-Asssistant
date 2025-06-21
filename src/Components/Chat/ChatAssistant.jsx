@@ -48,46 +48,44 @@ const ChatAssistant = ({ setBotStatus }) => {
   }, [messages]);
 
   return (
-    <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6">
-      <h2 className="text-xl font-semibold text-[#667eea] mb-4">💬 Ask Questions</h2>
-
+    <div className="relative bg-gradient-to-br from-cyan-100/60 via-teal-100/40 to-blue-100/30 border border-cyan-300/40 rounded-3xl p-10 shadow-2xl max-w-2xl mx-auto backdrop-blur-xl overflow-hidden">
+      {/* Decorative background icon */}
+      <div className="absolute -top-8 -right-8 w-32 h-32 bg-gradient-to-br from-cyan-200/40 to-teal-300/30 rounded-full blur-2xl z-0" />
+      <h2 className="text-3xl font-extrabold text-cyan-600 mb-8 flex items-center gap-2 z-10 relative drop-shadow-lg">💬 Ask Questions</h2>
       <div
         ref={chatRef}
-        className="max-h-80 overflow-y-auto mb-4 space-y-3 bg-white/5 p-4 rounded-lg"
+        className="max-h-80 overflow-y-auto mb-8 space-y-3 bg-white/40 p-4 rounded-xl shadow-inner z-10 relative"
       >
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`p-3 rounded-md max-w-[80%] ${
-              msg.sender === 'bot'
-                ? 'bg-white/10 text-white'
-                : 'bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white ml-auto'
-            }`}
+            className={`p-4 rounded-xl max-w-[80%] shadow-md transition-all duration-300 font-medium text-base ${msg.sender === 'bot'
+                ? 'bg-gradient-to-r from-cyan-100/80 to-blue-100/80 text-cyan-900'
+                : 'bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400 text-white ml-auto'
+              }`}
           >
             <strong>{msg.sender === 'bot' ? 'Aura' : 'You'}:</strong> {msg.text}
           </div>
         ))}
       </div>
-
       <input
         type="text"
         placeholder="Ask me anything..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
-        className="w-full p-3 bg-white/10 text-white border border-white/30 rounded-md focus:outline-none focus:ring-2 focus:ring-[#667eea] mb-3"
+        className="w-full p-3 bg-white/60 text-cyan-900 border border-cyan-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 mb-6 transition-all placeholder-cyan-400/70 shadow-inner z-10 relative"
       />
-
-      <div className="flex gap-4">
+      <div className="flex gap-4 z-10 relative">
         <button
           onClick={sendMessage}
-          className="px-5 py-2 rounded-full bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white hover:shadow-lg transition-all"
+          className="flex-1 px-5 py-3 rounded-xl bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400 text-white font-bold shadow-lg hover:shadow-cyan-400/40 hover:scale-105 transition-all duration-300 ring-2 ring-cyan-200/40 hover:ring-4 hover:ring-teal-300/40"
         >
           📤 Send
         </button>
         <button
           onClick={clearChat}
-          className="px-5 py-2 rounded-full bg-gradient-to-r from-[#ff6b6b] to-[#ff8e8e] text-white hover:shadow-lg transition-all"
+          className="flex-1 px-5 py-3 rounded-xl bg-gradient-to-r from-pink-300 via-cyan-200 to-blue-200 text-cyan-900 font-bold shadow-lg hover:shadow-pink-300/40 hover:scale-105 transition-all duration-300 ring-2 ring-pink-100/40 hover:ring-4 hover:ring-cyan-200/40"
         >
           🗑️ Clear Chat
         </button>
