@@ -1,5 +1,9 @@
+import TabContent from './Components/Tabs/TabContent';
+
 function App() {
-  return <h1>Hello World</h1>;
+  return 
+  <TabContent activeTab={activeTab} setBotStatus={setBotStatus} />
+;
 }
 
 export default App;
