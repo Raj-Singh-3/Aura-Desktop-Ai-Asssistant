@@ -10,6 +10,7 @@ import FileManager from "./Components/Files/FileManager";
 import ChatBot from "./Components/Bot/ChatBot";
 import BotAvatar from "./Components/Bot/BotAvatar";
 import NavigationTabs from "./Components/Tabs/NavigationTabs";
+import Camera from "./Components/Camera/camera";
 
 function App() {
   const [activeTab, setActiveTab] = useState("chat");
@@ -25,34 +26,35 @@ function App() {
     youtube: PlayYouTube,
     files: FileManager,
     chat: ChatBot,
+    camera: Camera,
   };
 
   const ActiveComponent = tabComponents[activeTab];
 
   // Enhanced command mapping
   const commandToTabMap = {
-    'linkedin': 'linkedin',
-    'linked in': 'linkedin',
-    'post': 'linkedin',
-    'email': 'email',
-    'mail': 'email',
-    'send email': 'email',
-    'alarm': 'alarm',
-    'reminder': 'alarm',
-    'timer': 'alarm',
-    'music': 'music',
-    'play music': 'music',
-    'song': 'music',
-    'youtube': 'youtube',
-    'you tube': 'youtube',
-    'video': 'youtube',
-    'file': 'files',
-    'files': 'files',
-    'folder': 'files',
-    'documents': 'files',
-    'chat': 'chat',
-    'talk': 'chat',
-    'ask': 'chat'
+    linkedin: "linkedin",
+    "linked in": "linkedin",
+    post: "linkedin",
+    email: "email",
+    mail: "email",
+    "send email": "email",
+    alarm: "alarm",
+    reminder: "alarm",
+    timer: "alarm",
+    music: "music",
+    "play music": "music",
+    song: "music",
+    youtube: "youtube",
+    "you tube": "youtube",
+    video: "youtube",
+    file: "files",
+    files: "files",
+    folder: "files",
+    documents: "files",
+    chat: "chat",
+    talk: "chat",
+    ask: "chat",
   };
 
   // Improved voice command handler
@@ -63,7 +65,7 @@ function App() {
 
     // Find the best matching command
     let matchedTab = null;
-    
+
     // First check for exact matches
     if (commandToTabMap[lowerCommand]) {
       matchedTab = commandToTabMap[lowerCommand];
@@ -78,17 +80,22 @@ function App() {
     }
 
     // Special case for "open" commands
-    if (!matchedTab && lowerCommand.startsWith('open ')) {
+    if (!matchedTab && lowerCommand.startsWith("open ")) {
       const openCommand = lowerCommand.substring(5).trim();
-      matchedTab = commandToTabMap[openCommand] || 
-                 Object.entries(commandToTabMap).find(([cmd]) => 
-                   openCommand.includes(cmd)
-                 )?.[1];
+      matchedTab =
+        commandToTabMap[openCommand] ||
+        Object.entries(commandToTabMap).find(([cmd]) =>
+          openCommand.includes(cmd)
+        )?.[1];
     }
 
     if (matchedTab) {
       setActiveTab(matchedTab);
-      setBotStatus(`Switched to ${tabs.find(t => t.id === matchedTab)?.label || matchedTab} tab`);
+      setBotStatus(
+        `Switched to ${
+          tabs.find((t) => t.id === matchedTab)?.label || matchedTab
+        } tab`
+      );
     } else {
       setBotStatus(`Command not recognized: "${command}"`);
     }
@@ -104,7 +111,7 @@ function App() {
     { id: "alarm", label: "Alarms" },
     { id: "music", label: "Music" },
     { id: "youtube", label: "YouTube" },
-    { id: "files", label: "Files" }
+    { id: "files", label: "Files" },
   ];
 
   return (
