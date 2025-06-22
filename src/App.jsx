@@ -7,7 +7,6 @@ import SetAlarm from "./Components/Alarms/SetAlarm";
 import PlayMusic from "./Components/PlayMusic";
 import PlayYouTube from "./Components/PlayYouTube";
 import FileManager from "./Components/Files/FileManager";
-// import CameraAccess from './components/CameraAccess';
 import ChatBot from "./Components/Bot/ChatBot";
 import BotAvatar from "./Components/Bot/BotAvatar";
 import NavigationTabs from "./Components/Tabs/NavigationTabs";
@@ -16,7 +15,7 @@ function App() {
   const [activeTab, setActiveTab] = useState("chat");
   const [isListening, setIsListening] = useState(false);
   const [recognizedText, setRecognizedText] = useState("");
-  const [botState, setBotState] = useState("idle"); // idle, listening, speaking, processing
+  const [botState, setBotState] = useState("idle");
 
   const tabComponents = {
     linkedin: LinkedInPost,
@@ -25,55 +24,88 @@ function App() {
     music: PlayMusic,
     youtube: PlayYouTube,
     files: FileManager,
-    // camera: CameraAccess,
     chat: ChatBot,
   };
 
   const ActiveComponent = tabComponents[activeTab];
 
+  // Enhanced command mapping
+  const commandToTabMap = {
+    'linkedin': 'linkedin',
+    'linked in': 'linkedin',
+    'post': 'linkedin',
+    'email': 'email',
+    'mail': 'email',
+    'send email': 'email',
+    'alarm': 'alarm',
+    'reminder': 'alarm',
+    'timer': 'alarm',
+    'music': 'music',
+    'play music': 'music',
+    'song': 'music',
+    'youtube': 'youtube',
+    'you tube': 'youtube',
+    'video': 'youtube',
+    'file': 'files',
+    'files': 'files',
+    'folder': 'files',
+    'documents': 'files',
+    'chat': 'chat',
+    'talk': 'chat',
+    'ask': 'chat'
+  };
+
+  // Improved voice command handler
   const handleVoiceCommand = (command) => {
+    const lowerCommand = command.toLowerCase().trim();
     setRecognizedText(command);
     setBotState("processing");
 
-    // Route voice commands to appropriate components
-    const lowerCommand = command.toLowerCase();
-
-    if (lowerCommand.includes("linkedin") || lowerCommand.includes("post")) {
-      setActiveTab("linkedin");
-    } else if (
-      lowerCommand.includes("email") ||
-      lowerCommand.includes("mail")
-    ) {
-      setActiveTab("email");
-    } else if (
-      lowerCommand.includes("alarm") ||
-      lowerCommand.includes("reminder")
-    ) {
-      setActiveTab("alarm");
-    } else if (
-      lowerCommand.includes("music") ||
-      lowerCommand.includes("play song")
-    ) {
-      setActiveTab("music");
-    } else if (
-      lowerCommand.includes("youtube") ||
-      lowerCommand.includes("video")
-    ) {
-      setActiveTab("youtube");
-    } else if (
-      lowerCommand.includes("file") ||
-      lowerCommand.includes("folder")
-    ) {
-      setActiveTab("files");
-    } else if (
-      lowerCommand.includes("camera") ||
-      lowerCommand.includes("photo")
-    ) {
-      setActiveTab("camera");
+    // Find the best matching command
+    let matchedTab = null;
+    
+    // First check for exact matches
+    if (commandToTabMap[lowerCommand]) {
+      matchedTab = commandToTabMap[lowerCommand];
+    } else {
+      // Then check for partial matches
+      for (const [cmd, tab] of Object.entries(commandToTabMap)) {
+        if (lowerCommand.includes(cmd)) {
+          matchedTab = tab;
+          break;
+        }
+      }
     }
 
-    setTimeout(() => setBotState("idle"), 2000);
+    // Special case for "open" commands
+    if (!matchedTab && lowerCommand.startsWith('open ')) {
+      const openCommand = lowerCommand.substring(5).trim();
+      matchedTab = commandToTabMap[openCommand] || 
+                 Object.entries(commandToTabMap).find(([cmd]) => 
+                   openCommand.includes(cmd)
+                 )?.[1];
+    }
+
+    if (matchedTab) {
+      setActiveTab(matchedTab);
+      setBotStatus(`Switched to ${tabs.find(t => t.id === matchedTab)?.label || matchedTab} tab`);
+    } else {
+      setBotStatus(`Command not recognized: "${command}"`);
+    }
+
+    setTimeout(() => setBotState("idle"), 1000);
   };
+
+  // Tab definitions moved here for better organization
+  const tabs = [
+    { id: "chat", label: "Chat" },
+    { id: "linkedin", label: "LinkedIn" },
+    { id: "email", label: "Email" },
+    { id: "alarm", label: "Alarms" },
+    { id: "music", label: "Music" },
+    { id: "youtube", label: "YouTube" },
+    { id: "files", label: "Files" }
+  ];
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">

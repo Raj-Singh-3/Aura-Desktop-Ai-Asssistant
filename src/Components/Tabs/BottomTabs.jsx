@@ -1,30 +1,3 @@
-// // src/components/Tabs/BottomTabs.jsx
-
-// import React from "react";
-
-// const BottomTabs = ({ tabs, activeTab, onTabSwitch }) => {
-//   return (
-//     <div className="w-full bg-gradient-to-t from-[#1e1e3f] to-[#2a2a5a] border-t border-white/20 px-3 py-2 flex justify-around items-center">
-//       {tabs.map((tab) => (
-//         <button
-//           key={tab.id}
-//           title={tab.title}
-//           onClick={() => onTabSwitch(tab.id)}
-//           className={`flex flex-col items-center px-3 py-1 rounded-md transition-all duration-300 ${
-//             activeTab === tab.id
-//               ? "bg-gradient-to-br from-[#667eea] to-[#764ba2] text-white scale-105 shadow-md"
-//               : "text-white/70 hover:text-white hover:bg-white/10"
-//           }`}
-//         >
-//           <div className="text-xl">{tab.icon}</div>
-//           <span className="text-xs font-medium">{tab.label}</span>
-//         </button>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default BottomTabs;
 import React from "react";
 const BottomTabs = ({ tabs, activeTab, onTabSwitch }) => {
   return (
