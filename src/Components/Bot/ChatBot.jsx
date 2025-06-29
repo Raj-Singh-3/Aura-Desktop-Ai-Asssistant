@@ -365,9 +365,8 @@ const ChatBot = () => {
   const [apiError, setApiError] = useState(null);
   const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef(null);
-  const recognitionRef = useRef(null); // 📌 Move this ABOVE toggleMic
+  const recognitionRef = useRef(null);
 
-  // 🧠 OpenAI client
   const openai = new OpenAI({
     baseURL: "https://openrouter.ai/api/v1",
     apiKey: import.meta.env.VITE_OPENROUTER_API_KEY,
@@ -378,7 +377,12 @@ const ChatBot = () => {
     dangerouslyAllowBrowser: true,
   });
 
-  // 🧠 Toggle mic
+  const speakText = (text) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-US";
+    window.speechSynthesis.speak(utterance);
+  };
+
   const toggleMic = () => {
     const recognition = recognitionRef.current;
     if (!recognition) {
@@ -393,7 +397,6 @@ const ChatBot = () => {
     }
   };
 
-  // 📢 Voice Recognition Setup
   useEffect(() => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -427,21 +430,20 @@ const ChatBot = () => {
         .join("");
       console.log("Transcript:", transcript);
       handleSendMessage(transcript);
-      recognition.stop(); // 🔇 Stop after 1 command
+      recognition.stop();
     };
 
     recognitionRef.current = recognition;
   }, []);
 
-  // 🧾 Scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  // 🧠 Send message logic
   const queryDeepSeekAI = async (prompt) => {
     setIsTyping(true);
     setApiError(null);
@@ -509,6 +511,9 @@ const ChatBot = () => {
     };
 
     setMessages((prev) => [...prev, newBotMessage]);
+
+    // 🗣 Speak the bot response
+    speakText(botResponse);
   };
 
   const clearChat = () => {
@@ -532,7 +537,6 @@ const ChatBot = () => {
 
   return (
     <div className="flex flex-col h-full bg-gradient-to-br from-slate-800/50 to-purple-900/50 backdrop-blur-sm rounded-2xl border border-purple-500/30">
-      {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-purple-500/30">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
@@ -552,7 +556,6 @@ const ChatBot = () => {
         </button>
       </div>
 
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         <AnimatePresence>
           {messages.map((message) => (
@@ -602,7 +605,6 @@ const ChatBot = () => {
           ))}
         </AnimatePresence>
 
-        {/* Typing Indicator */}
         {isTyping && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -633,7 +635,6 @@ const ChatBot = () => {
           </motion.div>
         )}
 
-        {/* Error Message */}
         {apiError && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -646,7 +647,6 @@ const ChatBot = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
       <div className="p-4 border-t border-purple-500/30">
         <div className="flex space-x-2 items-center">
           <input
@@ -658,7 +658,6 @@ const ChatBot = () => {
             className="flex-1 bg-black/50 border border-purple-500/30 rounded-xl px-4 py-3 text-white placeholder-purple-300 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20"
             disabled={isTyping}
           />
-          {/* 🎤 Mic Button */}
           <button
             onClick={toggleMic}
             className={`p-3 rounded-xl transition-all duration-200 hover:scale-105 ${
@@ -675,7 +674,6 @@ const ChatBot = () => {
             )}
           </button>
 
-          {/* 📤 Send Button */}
           <button
             onClick={() => handleSendMessage()}
             disabled={!inputText.trim() || isTyping}
