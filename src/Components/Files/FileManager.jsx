@@ -1,4 +1,3 @@
-// src/components/Files/FileManager.jsx
 import React, { useState } from 'react';
 
 const FileManager = ({ setBotStatus }) => {
